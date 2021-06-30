@@ -1,19 +1,7 @@
-// const printProfileDate = profileDataArr => {
-//     // This ...
-//     for(let i = 0; i < profileDataArr.length; i++){
-//         console.log(profileDataArr[i]);
-//     }
-
-//     console.log('============');
-
-//     // Is the same as this ...
-//     profileDataArr.forEach(profileItem => console.log(profileItem));
-    
-// };
-
-// printProfileDate(profileDataArgs);
-
+const fs = require('fs');
+const generatePage = require('./src/page-template');
 const inquirer = require('inquirer');
+
 const promptUser = () =>{
     return inquirer.prompt([
         {
@@ -65,20 +53,20 @@ const promptUser = () =>{
         }
     ]);
 };
-// promptUser().then(answers => console.log(answers));
 
 const promptProject = portfolioData => {
-    // If there's no 'projects' array property, create one
-    if(!portfolioData.projects){
-        portfolioData.projects = [];
-    }
-    
     console.log(`
     =================
     Add a New Project
     =================
     `);
-    return inquirer.prompt([
+
+    // If there's no 'projects' array property, create one
+    if(!portfolioData.projects){
+        portfolioData.projects = [];
+    }
+    return inquirer
+        .prompt([
         {
             type: 'input',
             name: 'name',
@@ -154,24 +142,14 @@ const promptProject = portfolioData => {
 promptUser()
     .then(promptProject)
     .then(portfolioData =>{
-        console.log(portfolioData);
+        const pageHTML = generatePage(portfolioData);
+        
+        fs.writeFile("./index.html", pageHTML, err =>{
+            if(err) throw Error(err);
+            console.log('Portfolio complete! Check out index.html to see the output!');
+        });
     });
+
+
     
 
-// const fs = require('fs');
-// const generatePage = require('./src/page-template');
-
-// const pageHTML = generatePage(name, github);
-
-// console.log(profileDataArgs);
-
-// const [name, github] = profileDataArgs;
-// console.log(name, github);
-
-
-
-// fs.writeFile("./index.html", pageHTML, err =>{
-//     if(err) throw Error(err);
-
-//     console.log('Portfolio complete! Check out index.html to see the output!');
-// });
